@@ -1,12 +1,31 @@
-import express from "express";
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import pool from './config/db.js';
+
+dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-app.get("/", (req, res) => {
-  res.send("Initial Server for EzQurbani");
-}); 
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-const PORT = 3000;
+// Test DB Connection
+pool.query('SELECT NOW()', (err, res) => {
+    if (err) {
+        console.error('❌ Database connection error:', err.stack);
+    } else {
+        console.log('✅ Database connected Alhamdulillah');
+    }
+});
+
+// Basic Route
+app.get('/', (req, res) => {
+    res.send('Qurbani Management System (QMS) Backend is running!');
+});
+
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
