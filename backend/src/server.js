@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import pool from './config/db.js';
+import authRoutes from './routes/auth.js';
 
 dotenv.config();
 
@@ -20,6 +21,9 @@ pool.query('SELECT NOW()', (err, res) => {
         console.log('✅ Database connected Alhamdulillah');
     }
 });
+
+// Routes
+app.use('/api/auth', authRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {
