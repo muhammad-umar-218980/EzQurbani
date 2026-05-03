@@ -53,15 +53,15 @@ const ManageSchedules = () => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
             <div className="lg:col-span-1 space-y-6">
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <PlusCircle className="text-indigo-600 w-5 h-5" /> New Schedule
+                <div className="bg-white/5 p-6 rounded-2xl shadow-lg border border-ez-gold/20">
+                    <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2 font-serif tracking-wide">
+                        <PlusCircle className="text-ez-gold w-5 h-5" /> New Schedule ⏰
                     </h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Select Animal</label>
+                            <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Select Animal</label>
                             <select 
-                                className="w-full p-2.5 bg-slate-50 border rounded-lg outline-none" required
+                                className="w-full p-2.5 bg-ez-dark border border-ez-gold/30 rounded-lg outline-none text-white focus:border-ez-gold" required
                                 value={formData.animal_id} onChange={(e) => setFormData({...formData, animal_id: e.target.value})}
                             >
                                 <option value="">Choose booked animal...</option>
@@ -69,9 +69,9 @@ const ManageSchedules = () => {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Slaughterhouse</label>
+                            <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Slaughterhouse</label>
                             <select 
-                                className="w-full p-2.5 bg-slate-50 border rounded-lg outline-none" required
+                                className="w-full p-2.5 bg-ez-dark border border-ez-gold/30 rounded-lg outline-none text-white focus:border-ez-gold" required
                                 value={formData.house_id} onChange={(e) => setFormData({...formData, house_id: e.target.value})}
                             >
                                 <option value="">Select location...</option>
@@ -79,9 +79,9 @@ const ManageSchedules = () => {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Butcher</label>
+                            <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Butcher</label>
                             <select 
-                                className="w-full p-2.5 bg-slate-50 border rounded-lg outline-none" required
+                                className="w-full p-2.5 bg-ez-dark border border-ez-gold/30 rounded-lg outline-none text-white focus:border-ez-gold" required
                                 value={formData.butcher_id} onChange={(e) => setFormData({...formData, butcher_id: e.target.value})}
                             >
                                 <option value="">Assign butcher...</option>
@@ -90,21 +90,21 @@ const ManageSchedules = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Date</label>
+                                <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Date</label>
                                 <input 
-                                    type="date" className="w-full p-2.5 bg-slate-50 border rounded-lg outline-none" required
+                                    type="date" className="w-full p-2.5 bg-ez-dark border border-ez-gold/30 rounded-lg outline-none text-white focus:border-ez-gold" required
                                     value={formData.slaughter_date} onChange={(e) => setFormData({...formData, slaughter_date: e.target.value})}
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Time</label>
+                                <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Time</label>
                                 <input 
-                                    type="time" className="w-full p-2.5 bg-slate-50 border rounded-lg outline-none" required
+                                    type="time" className="w-full p-2.5 bg-ez-dark border border-ez-gold/30 rounded-lg outline-none text-white focus:border-ez-gold" required
                                     value={formData.slaughter_time} onChange={(e) => setFormData({...formData, slaughter_time: e.target.value})}
                                 />
                             </div>
                         </div>
-                        <button type="submit" className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all active:scale-[0.98]">
+                        <button type="submit" className="w-full bg-ez-emerald text-ez-gold font-bold py-3 rounded-xl border border-ez-gold/30 hover:border-ez-gold transition-all active:scale-[0.98]">
                             Assign Schedule
                         </button>
                     </form>
@@ -112,27 +112,27 @@ const ManageSchedules = () => {
             </div>
 
             <div className="lg:col-span-2 space-y-6">
-                <h2 className="text-xl font-bold text-slate-900">Active Schedules</h2>
-                {loading ? <Loader2 className="animate-spin mx-auto mt-12 text-indigo-600" /> : (
+                <h2 className="text-3xl font-bold text-white font-serif tracking-wide">Active Schedules 📅</h2>
+                {loading ? <Loader2 className="animate-spin mx-auto mt-12 text-ez-gold" /> : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {schedules.map(item => (
-                            <div key={item.schedule_id} className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:border-indigo-200 transition-all">
+                            <div key={item.schedule_id} className="bg-white/5 p-5 rounded-2xl shadow-lg border border-ez-gold/20 relative overflow-hidden group hover:border-ez-gold/50 transition-all">
                                 <div className="absolute top-0 right-0 p-2">
-                                    <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded ${item.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                                    <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded ${item.status === 'completed' ? 'bg-green-500/20 text-green-400' : 'bg-ez-gold/20 text-ez-gold'}`}>
                                         {item.status}
                                     </span>
                                 </div>
-                                <h3 className="text-lg font-bold text-slate-900 mb-4">{item.category_name} ({item.tag_no})</h3>
+                                <h3 className="text-lg font-bold text-white mb-4">{item.category_name} ({item.tag_no})</h3>
                                 <div className="space-y-3">
-                                    <div className="flex items-center gap-2 text-sm text-slate-500">
-                                        <MapPin className="w-4 h-4 text-indigo-500" /> {item.house_name}
+                                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                                        <MapPin className="w-4 h-4 text-ez-gold" /> {item.house_name}
                                     </div>
-                                    <div className="flex items-center gap-2 text-sm text-slate-500">
-                                        <User className="w-4 h-4 text-indigo-500" /> {item.butcher_name}
+                                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                                        <User className="w-4 h-4 text-ez-gold" /> {item.butcher_name}
                                     </div>
-                                    <div className="flex items-center gap-4 text-sm text-slate-900 font-bold border-t border-slate-50 pt-3">
-                                        <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-slate-400" /> {new Date(item.slaughter_date).toLocaleDateString()}</div>
-                                        <div className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-slate-400" /> {item.slaughter_time}</div>
+                                    <div className="flex items-center gap-4 text-sm text-white font-bold border-t border-ez-gold/10 pt-3">
+                                        <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-ez-gold/70" /> {new Date(item.slaughter_date).toLocaleDateString()}</div>
+                                        <div className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-ez-gold/70" /> {item.slaughter_time}</div>
                                     </div>
                                 </div>
                             </div>
