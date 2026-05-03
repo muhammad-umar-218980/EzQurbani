@@ -1,13 +1,19 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './components/common/ProtectedRoute';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 // Pages
-import Login from './pages/Login';
-import Register from './pages/Register';
-import CustomerDashboard from './pages/customer/CustomerDashboard';
-import AdminDashboard from './pages/admin/AdminDashboard';
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import CustomerDashboard from "./pages/customer/CustomerDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 function App() {
   return (
@@ -19,28 +25,28 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           {/* Protected Customer Routes */}
-          <Route 
-            path="/dashboard/customer/*" 
+          <Route
+            path="/dashboard/customer/*"
             element={
               <ProtectedRoute role="customer">
                 <CustomerDashboard />
               </ProtectedRoute>
-            } 
+            }
           />
 
           {/* Protected Admin Routes */}
-          <Route 
-            path="/dashboard/admin/*" 
+          <Route
+            path="/dashboard/admin/*"
             element={
               <ProtectedRoute role="admin">
                 <AdminDashboard />
               </ProtectedRoute>
-            } 
+            }
           />
 
-          {/* Root Redirect */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          
+          {/* Root Route */}
+          <Route path="/" element={<Landing />} />
+
           {/* Catch-all Redirect */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
