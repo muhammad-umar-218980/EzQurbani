@@ -124,7 +124,8 @@ function Navbar({ onNav }) {
           <li><a onClick={() => scrollTo("animals")}>Animals</a></li>
           <li><a onClick={() => scrollTo("features")}>Features</a></li>
           <li><a onClick={() => scrollTo("faq")}>FAQ</a></li>
-          <li><a className="lnav__cta" onClick={() => onNav("/login")}>Book Now</a></li>
+          <li><a className="lnav__cta" style={{ background: "transparent", color: "var(--gold)", border: "1px solid var(--gold)" }} onClick={() => onNav("/login")}>Login</a></li>
+          <li><a className="lnav__cta" onClick={() => onNav("/register")}>Book Now</a></li>
         </ul>
         <button
           className={`lnav__hamburger${menuOpen ? " open" : ""}`}
@@ -140,6 +141,7 @@ function Navbar({ onNav }) {
         <a onClick={() => scrollTo("animals")}>Animals</a>
         <a onClick={() => scrollTo("features")}>Features</a>
         <a onClick={() => scrollTo("faq")}>FAQ</a>
+        <a onClick={() => onNav("/login")} style={{color: "var(--gold-lt)"}}>Login</a>
         <a onClick={() => onNav("/register")}>Book Now →</a>
       </div>
     </>
@@ -274,10 +276,10 @@ export default function Landing() {
             </p>
             <div className="hero__btns">
               <button className="btn-primary" onClick={() => navigate("/register")}>
-                🐄 Book Your Qurbani
+                🐄 Book Now
               </button>
-              <button className="btn-outline" onClick={() => scrollTo("how")}>
-                How It Works →
+              <button className="btn-outline" onClick={() => navigate("/login")}>
+                Login
               </button>
             </div>
             <div className="hero__stats">

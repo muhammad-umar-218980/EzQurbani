@@ -77,6 +77,7 @@
   font-weight: 500; letter-spacing: 0.03em;
   transition: color 0.2s;
   position: relative;
+  cursor: pointer;
 }
 .lnav__links a::after {
   content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
@@ -130,6 +131,7 @@
   padding: 13px 0; font-size: 1rem; font-weight: 500;
   border-bottom: 1px solid rgba(255,255,255,0.07);
   transition: color 0.2s;
+  cursor: pointer;
 }
 .lnav__mobile a:hover { color: var(--gold-lt); }
 
