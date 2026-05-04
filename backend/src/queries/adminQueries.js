@@ -5,7 +5,21 @@ export const GET_DASHBOARD_STATS = {
     TOTAL_BOOKINGS: `SELECT COUNT(*) as count FROM BOOKING`,
     TOTAL_REVENUE: `SELECT SUM(amount) as total FROM PAYMENT`,
     AVAILABLE_ANIMALS: `SELECT COUNT(*) as count FROM ANIMAL WHERE status = 'available'`,
-    PENDING_DELIVERIES: `SELECT COUNT(*) as count FROM DELIVERY_ORDER WHERE status != 'delivered'`
+    PENDING_DELIVERIES: `SELECT COUNT(*) as count FROM DELIVERY_ORDER WHERE status != 'delivered'`,
+    CATEGORY_DISTRIBUTION: `
+        SELECT ac.name as name, COUNT(b.booking_id) as value
+        FROM BOOKING b
+        JOIN ANIMAL a ON b.animal_id = a.animal_id
+        JOIN ANIMAL_CATEGORY ac ON a.category_id = ac.category_id
+        GROUP BY ac.name
+    `,
+    REVENUE_TREND: `
+        SELECT TO_CHAR(created_at, 'Mon DD') as date, SUM(total_amount) as total
+        FROM BOOKING
+        GROUP BY TO_CHAR(created_at, 'Mon DD'), DATE(created_at)
+        ORDER BY DATE(created_at) ASC
+        LIMIT 7
+    `
 };
 
 export const GET_ALL_USERS = `

@@ -18,12 +18,17 @@ export const getDashboardStats = async (req, res) => {
         const revenue = await pool.query(GET_DASHBOARD_STATS.TOTAL_REVENUE);
         const animals = await pool.query(GET_DASHBOARD_STATS.AVAILABLE_ANIMALS);
         const deliveries = await pool.query(GET_DASHBOARD_STATS.PENDING_DELIVERIES);
+        
+        const distribution = await pool.query(GET_DASHBOARD_STATS.CATEGORY_DISTRIBUTION);
+        const trend = await pool.query(GET_DASHBOARD_STATS.REVENUE_TREND);
 
         res.json({
             totalBookings: parseInt(bookings.rows[0].count),
             totalRevenue: parseFloat(revenue.rows[0].total || 0),
             availableAnimals: parseInt(animals.rows[0].count),
-            pendingDeliveries: parseInt(deliveries.rows[0].count)
+            pendingDeliveries: parseInt(deliveries.rows[0].count),
+            categoryDistribution: distribution.rows.map(d => ({ name: d.name, value: parseInt(d.value) })),
+            revenueTrend: trend.rows.map(t => ({ date: t.date, total: parseFloat(t.total) }))
         });
     } catch (err) {
         console.error(err.message);

@@ -8,6 +8,12 @@ import {
     TrendingUp,
     Loader2
 } from 'lucide-react';
+import {
+    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+    PieChart, Pie, Cell, Legend
+} from 'recharts';
+
+const COLORS = ['#10b981', '#f59e0b', '#6366f1', '#3b82f6'];
 
 const AdminOverview = () => {
     const [stats, setStats] = useState(null);
@@ -73,12 +79,66 @@ const AdminOverview = () => {
                 })}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="bg-white/5 p-8 rounded-2xl shadow-lg border border-ez-gold/20 h-64 flex items-center justify-center text-ez-gold/50 italic font-serif text-lg">
-                    Revenue Chart Placeholder
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                <div className="bg-white/5 p-6 rounded-2xl shadow-lg border border-ez-gold/20 h-80 flex flex-col">
+                    <h3 className="text-white font-bold mb-4 font-serif text-xl tracking-wide">Revenue Trend (Last 7 Days)</h3>
+                    <div className="flex-1 w-full">
+                        {stats.revenueTrend && stats.revenueTrend.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={stats.revenueTrend} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                                    <defs>
+                                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#c9a84c" stopOpacity={0.8}/>
+                                            <stop offset="95%" stopColor="#c9a84c" stopOpacity={0}/>
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
+                                    <XAxis dataKey="date" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
+                                    <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `Rs.${val/1000}k`} />
+                                    <Tooltip 
+                                        contentStyle={{ backgroundColor: '#111827', borderColor: 'rgba(201,168,76,0.3)', borderRadius: '8px' }}
+                                        itemStyle={{ color: '#c9a84c', fontWeight: 'bold' }}
+                                        formatter={(value) => [`Rs. ${value.toLocaleString()}`, 'Revenue']}
+                                    />
+                                    <Area type="monotone" dataKey="total" stroke="#c9a84c" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="h-full flex items-center justify-center text-ez-gold/50 italic font-serif">No revenue data available</div>
+                        )}
+                    </div>
                 </div>
-                <div className="bg-white/5 p-8 rounded-2xl shadow-lg border border-ez-gold/20 h-64 flex items-center justify-center text-ez-gold/50 italic font-serif text-lg">
-                    Booking Category Distribution Placeholder
+
+                <div className="bg-white/5 p-6 rounded-2xl shadow-lg border border-ez-gold/20 h-80 flex flex-col">
+                    <h3 className="text-white font-bold mb-4 font-serif text-xl tracking-wide">Booking Distribution</h3>
+                    <div className="flex-1 w-full">
+                        {stats.categoryDistribution && stats.categoryDistribution.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={stats.categoryDistribution}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        paddingAngle={5}
+                                        dataKey="value"
+                                    >
+                                        {stats.categoryDistribution.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip 
+                                        contentStyle={{ backgroundColor: '#111827', borderColor: 'rgba(201,168,76,0.3)', borderRadius: '8px', color: '#fff' }}
+                                        formatter={(value) => [value, 'Bookings']}
+                                    />
+                                    <Legend verticalAlign="bottom" height={36} iconType="circle" />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="h-full flex items-center justify-center text-ez-gold/50 italic font-serif">No distribution data available</div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
