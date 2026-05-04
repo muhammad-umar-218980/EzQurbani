@@ -4,6 +4,7 @@
 import express from 'express';
 import {
     getAnimals,
+    getAnimalsSummary,
     getAnimalById,
     getAnimalHissas,
     addAnimal,
@@ -14,6 +15,7 @@ import { verifyToken, requireAdmin } from '../middleware/auth.js';
 const router = express.Router();
 
 // Public routes
+router.get('/summary', getAnimalsSummary);
 router.get('/', getAnimals);
 router.get('/:id', getAnimalById);
 router.get('/:id/hissas', getAnimalHissas);

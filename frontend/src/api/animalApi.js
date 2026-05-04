@@ -1,7 +1,13 @@
 import axiosInstance from './axiosInstance';
 
-export const getAnimals = async () => {
-    const response = await axiosInstance.get('/animals');
+export const getAnimalsSummary = async () => {
+    const response = await axiosInstance.get('/animals/summary');
+    return response.data;
+};
+
+export const getAnimals = async (category = '') => {
+    const url = category ? `/animals?category=${category}` : '/animals';
+    const response = await axiosInstance.get(url);
     return response.data;
 };
 

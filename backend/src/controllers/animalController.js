@@ -4,16 +4,35 @@
 import pool from '../config/db.js';
 import {
     GET_ALL_AVAILABLE_ANIMALS,
+    GET_ANIMALS_BY_CATEGORY,
+    GET_ANIMALS_SUMMARY,
     GET_ANIMAL_BY_ID,
     GET_ANIMAL_HISSAS,
     INSERT_ANIMAL,
     UPDATE_ANIMAL_STATUS
 } from '../queries/animalQueries.js';
 
-// Get all available animals
+// Get animals summary (count per category)
+export const getAnimalsSummary = async (req, res) => {
+    try {
+        const result = await pool.query(GET_ANIMALS_SUMMARY);
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Get all available animals (optionally filtered by category)
 export const getAnimals = async (req, res) => {
     try {
-        const result = await pool.query(GET_ALL_AVAILABLE_ANIMALS);
+        const { category } = req.query;
+        let result;
+        if (category) {
+            result = await pool.query(GET_ANIMALS_BY_CATEGORY, [category]);
+        } else {
+            result = await pool.query(GET_ALL_AVAILABLE_ANIMALS);
+        }
         res.json(result.rows);
     } catch (err) {
         console.error(err.message);
