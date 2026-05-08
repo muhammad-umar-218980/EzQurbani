@@ -10,12 +10,13 @@ import {
     UPDATE_ANIMAL_STATUS,
     GET_MY_BOOKINGS,
     GET_ALL_BOOKINGS,
-    UPDATE_BOOKING_STATUS
+    UPDATE_BOOKING_STATUS,
+    INSERT_ADDRESS
 } from '../queries/bookingQueries.js';
 
 // Create a new booking (Most Important Function)
 export const createBooking = async (req, res) => {
-    const { animal_id, hissa_id, discount_id, booking_type, total_amount } = req.body;
+    const { animal_id, hissa_id, discount_id, booking_type, total_amount, qurbani_day, delivery_preference, address_line, city_id } = req.body;
     const user_id = req.user.id; // From verifyToken middleware
 
     const client = await pool.connect(); // Use a single client for transaction
@@ -23,8 +24,11 @@ export const createBooking = async (req, res) => {
     try {
         await client.query('BEGIN');
 
-        // 1. Availability Check
+        // 1. Availability and Rule Check
         if (booking_type === 'hissa') {
+            if (delivery_preference === 'deliver_alive') {
+                return res.status(400).json({ message: 'Whole animal delivery is only available for full bookings' });
+            }
             if (!hissa_id) throw new Error('Hissa ID is required for hissa booking');
             const hissaCheck = await client.query(CHECK_HISSA_AVAILABLE, [hissa_id]);
             if (hissaCheck.rows.length === 0 || hissaCheck.rows[0].status !== 'available') {
@@ -39,7 +43,19 @@ export const createBooking = async (req, res) => {
             }
         }
 
-        // 2. Insert Booking
+        // 2. Insert Address if needed
+        let address_id = null;
+        if (delivery_preference !== 'pickup' && address_line) {
+            // Assume city_id is provided, default to 1 (Karachi) if not for simplicity
+            const addressResult = await client.query(INSERT_ADDRESS, [
+                user_id,
+                city_id || 1,
+                address_line
+            ]);
+            address_id = addressResult.rows[0].address_id;
+        }
+
+        // 3. Insert Booking
         const bookingResult = await client.query(INSERT_BOOKING, [
             user_id,
             animal_id,
@@ -47,11 +63,14 @@ export const createBooking = async (req, res) => {
             discount_id || null,
             booking_type,
             total_amount,
-            'pending' // Default status
+            'pending', // Default status
+            qurbani_day || null,
+            delivery_preference || null,
+            address_id
         ]);
         const newBooking = bookingResult.rows[0];
 
-        // 3. Update Status (Prevent Double Booking)
+        // 4. Update Status (Prevent Double Booking)
         if (booking_type === 'hissa') {
             await client.query(UPDATE_HISSA_STATUS, ['booked', hissa_id]);
         } else {

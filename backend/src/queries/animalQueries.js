@@ -47,3 +47,27 @@ export const UPDATE_ANIMAL_STATUS = `
     UPDATE ANIMAL SET status = $1 WHERE animal_id = $2
     RETURNING *
 `;
+
+export const GET_ACTIVE_HISSA_ANIMAL = `
+    SELECT a.*, COUNT(h.hissa_id) as booked_hissas
+    FROM ANIMAL a
+    JOIN HISSA h ON a.animal_id = h.animal_id AND h.status = 'booked'
+    WHERE a.category_id = (SELECT category_id FROM ANIMAL_CATEGORY WHERE name = $1)
+    AND a.status = 'available'
+    GROUP BY a.animal_id
+    HAVING COUNT(h.hissa_id) < 7 AND COUNT(h.hissa_id) > 0
+    ORDER BY a.animal_id ASC
+    LIMIT 1
+`;
+
+export const GET_EMPTY_HISSA_ANIMAL = `
+    SELECT a.*, 0 as booked_hissas
+    FROM ANIMAL a
+    WHERE a.category_id = (SELECT category_id FROM ANIMAL_CATEGORY WHERE name = $1)
+    AND a.status = 'available'
+    AND NOT EXISTS (
+        SELECT 1 FROM HISSA h WHERE h.animal_id = a.animal_id AND h.status = 'booked'
+    )
+    ORDER BY a.animal_id ASC
+    LIMIT 1
+`;

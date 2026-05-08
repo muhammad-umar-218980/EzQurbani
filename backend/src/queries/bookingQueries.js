@@ -6,8 +6,14 @@ export const CHECK_ANIMAL_AVAILABLE = `SELECT status FROM ANIMAL WHERE animal_id
 export const CHECK_HISSA_AVAILABLE = `SELECT status FROM HISSA WHERE hissa_id = $1`;
 
 export const INSERT_BOOKING = `
-    INSERT INTO BOOKING (user_id, animal_id, hissa_id, discount_id, booking_type, total_amount, status)
-    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    INSERT INTO BOOKING (user_id, animal_id, hissa_id, discount_id, booking_type, total_amount, status, qurbani_day, delivery_preference, address_id)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    RETURNING *
+`;
+
+export const INSERT_ADDRESS = `
+    INSERT INTO ADDRESS (user_id, city_id, address_line)
+    VALUES ($1, $2, $3)
     RETURNING *
 `;
 

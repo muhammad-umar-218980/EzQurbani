@@ -101,6 +101,9 @@ CREATE TABLE BOOKING (
     hissa_id INT REFERENCES HISSA(hissa_id), -- Nullable if full animal booking
     discount_id INT REFERENCES DISCOUNT(discount_id),
     booking_type VARCHAR(10) NOT NULL CHECK (booking_type IN ('full', 'hissa')),
+    qurbani_day VARCHAR(20),
+    delivery_preference VARCHAR(50) CHECK (delivery_preference IN ('perform_and_deliver', 'deliver_alive', 'pickup')),
+    address_id INT REFERENCES ADDRESS(address_id),
     total_amount DECIMAL(10, 2) NOT NULL,
     status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'cancelled')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

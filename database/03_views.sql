@@ -19,7 +19,10 @@ SELECT
     pm.name AS payment_method,
     r.receipt_no,
     del.status AS delivery_status,
-    b.created_at AS booking_date
+    b.created_at AS booking_date,
+    b.qurbani_day,
+    b.delivery_preference,
+    addr.address_line AS delivery_address
 FROM 
     BOOKING b
 JOIN "USER" u ON b.user_id = u.user_id
@@ -31,7 +34,8 @@ LEFT JOIN PAYMENT pay ON b.booking_id = pay.booking_id
 LEFT JOIN PAYMENT_METHOD pm ON pay.method_id = pm.method_id
 LEFT JOIN RECEIPT r ON pay.payment_id = r.payment_id
 LEFT JOIN MEAT_PACKAGE mp ON b.booking_id = mp.booking_id
-LEFT JOIN DELIVERY_ORDER del ON mp.package_id = del.package_id;
+LEFT JOIN DELIVERY_ORDER del ON mp.package_id = del.package_id
+LEFT JOIN ADDRESS addr ON b.address_id = addr.address_id;
 
 -- 2. admin_dashboard_view
 -- Purpose: For administrators to see a global view of all operations.
@@ -53,7 +57,10 @@ SELECT
     sh.name AS slaughter_house,
     del.status AS delivery_status,
     da.name AS delivery_agent,
-    b.created_at AS booking_date
+    b.created_at AS booking_date,
+    b.qurbani_day,
+    b.delivery_preference,
+    addr.address_line AS delivery_address
 FROM 
     BOOKING b
 JOIN PERSON p ON b.user_id = p.person_id
@@ -68,7 +75,8 @@ LEFT JOIN SLAUGHTER_HOUSE sh ON ss.house_id = sh.house_id
 LEFT JOIN MEAT_PACKAGE mp ON b.booking_id = mp.booking_id
 LEFT JOIN DELIVERY_ORDER del ON mp.package_id = del.package_id
 LEFT JOIN DELIVERY_AGENT da ON del.agent_id = da.agent_id
+LEFT JOIN ADDRESS addr ON b.address_id = addr.address_id
 GROUP BY 
     b.booking_id, p.name, p.phone, a.tag_no, ac.name, v.name, b.booking_type, 
     h.hissa_no, b.total_amount, b.status, ss.status, bch.name, sh.name, 
-    del.status, da.name, b.created_at;
+    del.status, da.name, b.created_at, b.qurbani_day, b.delivery_preference, addr.address_line;

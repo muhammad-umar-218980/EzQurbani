@@ -20,3 +20,8 @@ export const getAnimalHissas = async (id) => {
     const response = await axiosInstance.get(`/animals/${id}/hissas`);
     return response.data;
 };
+
+export const getActiveHissaAnimal = async (category) => {
+    const response = await axiosInstance.get(`/animals/hissa/active/${category}`);
+    return response.data;
+};

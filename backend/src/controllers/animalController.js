@@ -9,7 +9,9 @@ import {
     GET_ANIMAL_BY_ID,
     GET_ANIMAL_HISSAS,
     INSERT_ANIMAL,
-    UPDATE_ANIMAL_STATUS
+    UPDATE_ANIMAL_STATUS,
+    GET_ACTIVE_HISSA_ANIMAL,
+    GET_EMPTY_HISSA_ANIMAL
 } from '../queries/animalQueries.js';
 
 // Get animals summary (count per category)
@@ -59,6 +61,36 @@ export const getAnimalHissas = async (req, res) => {
     try {
         const result = await pool.query(GET_ANIMAL_HISSAS, [req.params.id]);
         res.json(result.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Get the active animal for hissa booking
+export const getActiveHissaAnimal = async (req, res) => {
+    try {
+        const { category } = req.params;
+        
+        // Try to find a partially filled animal
+        let result = await pool.query(GET_ACTIVE_HISSA_ANIMAL, [category]);
+        
+        // If no partially filled animal, get the next empty one
+        if (result.rows.length === 0) {
+            result = await pool.query(GET_EMPTY_HISSA_ANIMAL, [category]);
+        }
+        
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'No animals available for hissa in this category' });
+        }
+        
+        const animal = result.rows[0];
+        
+        // Fetch the hissas for this active animal
+        const hissasResult = await pool.query(GET_ANIMAL_HISSAS, [animal.animal_id]);
+        animal.hissas = hissasResult.rows;
+        
+        res.json(animal);
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ message: 'Server error' });

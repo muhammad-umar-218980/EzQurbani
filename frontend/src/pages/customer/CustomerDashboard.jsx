@@ -21,6 +21,7 @@ import MyPayments from './MyPayments';
 import MyReceipts from './MyReceipts';
 import TrackDelivery from './TrackDelivery';
 import BookConfirm from './BookConfirm';
+import HissaBooking from './HissaBooking';
 
 const CustomerDashboard = () => {
     const { user, logout } = useContext(AuthContext);
@@ -124,6 +125,7 @@ const CustomerDashboard = () => {
                     <Routes>
                         <Route path="/" element={<Overview user={user} />} />
                         <Route path="/browse" element={<BrowseAnimals />} />
+                        <Route path="/hissa-booking/:category" element={<HissaBooking />} />
                         <Route path="/book-confirm" element={<BookConfirm />} />
                         <Route path="/bookings" element={<MyBookings />} />
                         <Route path="/payment" element={<MyPayments />} />

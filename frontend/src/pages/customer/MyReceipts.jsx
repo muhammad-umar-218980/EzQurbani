@@ -104,6 +104,24 @@ const MyReceipts = () => {
                             <span className="text-gray-500">Animal Tag</span>
                             <span className="text-gray-900 font-bold">{receipt.tag_no}</span>
                         </div>
+                        
+                        {bookings.find(b => b.booking_id === receipt.booking_id)?.qurbani_day && (
+                            <div className="flex justify-between">
+                                <span className="text-gray-500">Qurbani Day</span>
+                                <span className="text-gray-900 font-bold">
+                                    {bookings.find(b => b.booking_id === receipt.booking_id)?.qurbani_day}
+                                </span>
+                            </div>
+                        )}
+                        
+                        {bookings.find(b => b.booking_id === receipt.booking_id)?.delivery_preference && (
+                            <div className="flex justify-between">
+                                <span className="text-gray-500">Delivery Pref.</span>
+                                <span className="text-gray-900 font-bold capitalize">
+                                    {bookings.find(b => b.booking_id === receipt.booking_id)?.delivery_preference.replace(/_/g, ' ')}
+                                </span>
+                            </div>
+                        )}
 
                         <div className="bg-ez-cream p-6 rounded-2xl mt-8 border border-ez-gold/20">
                             <div className="flex justify-between items-center text-xl font-black text-ez-emerald">

@@ -69,14 +69,25 @@ const MyBookings = () => {
                                     <tr key={booking.booking_id} className="hover:bg-ez-cream/50 transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col">
-                                                <span className="font-bold text-ez-emerald capitalize font-serif text-lg">{booking.animal_name}</span>
+                                                <span className="font-bold text-ez-emerald capitalize font-serif text-lg">{booking.animal_name || booking.category_name}</span>
                                                 <span className="text-xs text-ez-gold font-mono font-bold">TAG: {booking.tag_no}</span>
+                                                {booking.qurbani_day && (
+                                                    <span className="text-xs text-gray-500 mt-1">Day: {booking.qurbani_day}</span>
+                                                )}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className="text-sm font-medium text-gray-700 capitalize">
-                                                {booking.booking_type === 'hissa' ? `Hissa Slot #${booking.hissa_no}` : 'Full Animal'}
-                                            </span>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-medium text-gray-700 capitalize">
+                                                    {booking.booking_type === 'hissa' ? `Hissa Slot #${booking.hissa_no}` : 'Full Animal'}
+                                                </span>
+                                                {booking.delivery_preference && (
+                                                    <span className="text-xs text-gray-500 mt-1">
+                                                        {booking.delivery_preference === 'perform_and_deliver' ? 'Deliver Meat' : 
+                                                         booking.delivery_preference === 'deliver_alive' ? 'Deliver Alive' : 'Pickup'}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4">
                                             <span className="text-sm font-bold text-gray-900">Rs. {parseFloat(booking.total_amount).toLocaleString()}</span>

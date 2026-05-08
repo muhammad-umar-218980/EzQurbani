@@ -7,6 +7,7 @@ import {
     getAnimalsSummary,
     getAnimalById,
     getAnimalHissas,
+    getActiveHissaAnimal,
     addAnimal,
     updateAnimalStatus
 } from '../controllers/animalController.js';
@@ -16,6 +17,7 @@ const router = express.Router();
 
 // Public routes
 router.get('/summary', getAnimalsSummary);
+router.get('/hissa/active/:category', getActiveHissaAnimal);
 router.get('/', getAnimals);
 router.get('/:id', getAnimalById);
 router.get('/:id/hissas', getAnimalHissas);
