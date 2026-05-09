@@ -1,68 +1,69 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Landing.css";
+import halalCert from "../assets/halal-cert.png";
 
 /* ─── DATA ─────────────────────────────────── */
 const ANIMALS = [
   {
-    id: 1, emoji: "🐄", name: "Desi Gaye", type: "Cow", filter: "hissa",
-    weight: "320 kg", city: "Karachi", price: "Rs 18,000", priceLabel: "per hissa (1/7)",
-    badge: "hissa", badgeText: "Hissa Available", btnText: "Book Hissa",
-  },
-  {
-    id: 2, emoji: "🐂", name: "Sahiwal Wanda", type: "Cow", filter: "hissa",
-    weight: "410 kg", city: "Lahore", price: "Rs 24,000", priceLabel: "per hissa (1/7)",
-    badge: "hissa", badgeText: "4 Hissas Left", btnText: "Book Hissa",
-  },
-  {
-    id: 3, emoji: "🐐", name: "Beetal Bakra", type: "Goat", filter: "full",
-    weight: "35 kg", city: "Islamabad", price: "Rs 45,000", priceLabel: "full animal",
+    id: 1, emoji: "🐄", name: "Cow (Full Animal)", type: "Cow", filter: "full",
+    weight: "320 kg", city: "Karachi", price: "Rs 180,000", priceLabel: "full animal",
     badge: "full", badgeText: "Full Only", btnText: "Book Now",
   },
   {
-    id: 4, emoji: "🐑", name: "Rakhshani Dumba", type: "Sheep", filter: "full",
+    id: 2, emoji: "🐐", name: "Bakra (Full Animal)", type: "Goat", filter: "full",
+    weight: "35 kg", city: "Islamabad", price: "Rs 55,000", priceLabel: "full animal",
+    badge: "full", badgeText: "Full Only", btnText: "Book Now",
+  },
+  {
+    id: 3, emoji: "🐪", name: "Camel (Full Animal)", type: "Camel", filter: "full",
+    weight: "520 kg", city: "Karachi", price: "Rs 380,000", priceLabel: "full animal",
+    badge: "full", badgeText: "Full Only", btnText: "Book Now",
+  },
+  {
+    id: 4, emoji: "🐑", name: "Sheep (Full Animal)", type: "Sheep", filter: "full",
     weight: "45 kg", city: "Karachi", price: "Rs 65,000", priceLabel: "full animal",
     badge: "full", badgeText: "Full Only", btnText: "Book Now",
   },
   {
-    id: 5, emoji: "🐪", name: "Sindhi Oont", type: "Camel", filter: "hissa",
-    weight: "520 kg", city: "Karachi", price: "Rs 55,000", priceLabel: "per hissa (1/7)",
-    badge: "hissa", badgeText: "Premium", btnText: "Book Hissa",
+    id: 5, emoji: "🐄", name: "Cow Hissa", type: "Cow", filter: "hissa",
+    weight: "320 kg", city: "Karachi", price: "Rs 26,000", priceLabel: "per hissa (1/7)",
+    badge: "hissa", badgeText: "Hissa Available", btnText: "Book Hissa",
   },
   {
-    id: 6, emoji: "🐏", name: "Kajli Bakra", type: "Goat", filter: "full",
-    weight: "28 kg", city: "Lahore", price: "Rs 32,000", priceLabel: "full animal",
-    badge: "full", badgeText: "Full Only", btnText: "Book Now",
+    id: 6, emoji: "🐪", name: "Camel Hissa", type: "Camel", filter: "hissa",
+    weight: "520 kg", city: "Karachi", price: "Rs 55,000", priceLabel: "per hissa (1/7)",
+    badge: "hissa", badgeText: "Hissa Available", btnText: "Book Hissa",
   },
 ];
 
 const STEPS = [
   { num: 1, icon: "📋", title: "Register & Browse", desc: "Create your account in under a minute and browse our verified inventory of healthy animals — each with weight, price, and health certificate." },
-  { num: 2, icon: "🎯", title: "Choose & Book",    desc: "Book a full animal or select one of 7 hissas in a shared cow or camel. Your hissa is instantly locked — no double booking, ever." },
-  { num: 3, icon: "💳", title: "Pay Securely",     desc: "Pay via Easypaisa, JazzCash, bank transfer, or cash. Receive an instant digital receipt with your booking confirmation number." },
-  { num: 4, icon: "🏠", title: "Receive at Home",  desc: "Your Qurbani is performed on Eid day by licensed butchers. Packaged meat is delivered fresh to your doorstep." },
+  { num: 2, icon: "🎯", title: "Choose & Book", desc: "Book a full animal or select one of 7 hissas in a shared cow or camel. Your hissa is instantly locked — no double booking, ever." },
+  { num: 3, icon: "💳", title: "Pay Securely", desc: "Pay via Easypaisa, JazzCash, bank transfer, or cash. Receive an instant digital receipt with your booking confirmation number." },
+  { num: 4, icon: "🏠", title: "Receive at Home", desc: "Your Qurbani is performed on Eid day by licensed butchers. Packaged meat is delivered fresh to your doorstep." },
 ];
 
 const FEATURES = [
-  { icon: "🔒", title: "Hissa Anti-Overbooking Lock",  desc: "Each of the 7 hissa slots is locked the moment it's booked. No overselling, no disputes — mathematically impossible to book 8 shares of one animal." },
-  { icon: "🩺", title: "Vet-Certified Animals",         desc: "Every animal comes with a health inspection record from a certified veterinarian — ensuring your Qurbani meets full Shariah compliance requirements." },
-  { icon: "📦", title: "Doorstep Meat Delivery",        desc: "Your packaged meat is delivered fresh on Eid day. Track your delivery in real time from the slaughterhouse to your front door." },
-  { icon: "🧾", title: "Instant Digital Receipt",       desc: "Every payment generates a digital receipt with a unique booking ID. Your records are always accessible from your personal dashboard." },
+  { icon: "🔒", title: "Hissa Anti-Overbooking Lock", desc: "Each of the 7 hissa slots is locked the moment it's booked. No overselling, no disputes — mathematically impossible to book 8 shares of one animal." },
+  { icon: "🩺", title: "Vet-Certified Animals", desc: "Every animal comes with a health inspection record from a certified veterinarian — ensuring your Qurbani meets full Shariah compliance requirements." },
+  { icon: "📦", title: "Doorstep Meat Delivery", desc: "Your packaged meat is delivered fresh on Eid day. Track your delivery in real time from the slaughterhouse to your front door." },
+  { icon: "🧾", title: "Instant Digital Receipt", desc: "Every payment generates a digital receipt with a unique booking ID. Your records are always accessible from your personal dashboard." },
 ];
 
 const TESTIMONIALS = [
-  { stars: 5, text: "Finally a proper system for Qurbani. I booked my hissa in under 2 minutes, paid via Easypaisa, and received my meat on Eid afternoon. No stress at all. JazakAllah Khair EzQurbani!", name: "Tariq Ahmed",        city: "Karachi, DHA Phase 6", avatar: "👨" },
-  { stars: 5, text: "Maine pehli dafa online Qurbani book ki thi. Vet certificate dekh ke dil ko sukoon mila. Animal healthy tha, slaughter on time hua, aur delivery bhi aa gayi. Bohot acha system hai.", name: "Sana Riaz",          city: "Lahore, Gulberg",     avatar: "👩" },
-  { stars: 5, text: "The hissa booking system is genius. We are a family of 4 brothers — we each took one hissa of the same cow. The booking was instant and we all got our own receipts. Highly recommended.", name: "Dr. Kashif Mahmood", city: "Islamabad, F-7",      avatar: "👨" },
+  { stars: 5, text: "Finally a proper system for Qurbani. I booked my hissa in under 2 minutes, paid via Easypaisa, and received my meat on Eid afternoon. No stress at all. JazakAllah Khair EzQurbani!", name: "Tariq Ahmed", city: "Karachi, DHA Phase 6", avatar: "👨" },
+  { stars: 5, text: "Maine pehli dafa online Qurbani book ki thi. Vet certificate dekh ke dil ko sukoon mila. Animal healthy tha, slaughter on time hua, aur delivery bhi aa gayi. Bohot acha system hai.", name: "Sana Riaz", city: "Lahore, Gulberg", avatar: "👩" },
+  { stars: 5, text: "The hissa booking system is genius. We are a family of 4 brothers — we each took one hissa of the same cow. The booking was instant and we all got our own receipts. Highly recommended.", name: "Dr. Kashif Mahmood", city: "Islamabad, F-7", avatar: "👨" },
 ];
 
 const FAQS = [
-  { q: "What is a Hissa and how does it work?",    a: "A Hissa is one of the 7 equal shares of a large animal (cow or camel). According to Islamic law, one large animal can fulfill the Qurbani obligation for up to 7 people. You pay for 1/7th of the animal's price and receive 1/7th of the meat after slaughter." },
-  { q: "Are the animals Shariah-compliant?",        a: "Yes. All animals on EzQurbani meet the Shariah requirements for Qurbani — they are above the minimum age, healthy, free from major defects, and pass a vet inspection. Each animal has a health certificate you can view before booking." },
-  { q: "When will my meat be delivered?",           a: "Slaughter is performed on the morning of Eid ul-Adha (10th Dhul Hijjah). Meat is packaged and delivered to your registered address on the same day. You will receive real-time delivery tracking notifications." },
-  { q: "Can I cancel my booking?",                  a: "Cancellations are accepted up to 7 days before Eid. After that, bookings are final as animal preparation has already begun. Contact our support team for cancellation requests within the eligible window." },
-  { q: "Which payment methods are accepted?",       a: "We accept Easypaisa, JazzCash, bank transfer (all major Pakistani banks), and cash payment at the time of delivery confirmation. All transactions generate a digital receipt immediately." },
-  { q: "Which cities do you serve?",                a: "We currently serve Karachi, Lahore, and Islamabad. We are expanding to Hyderabad, Faisalabad, and Peshawar for Eid 2027. Enter your city during registration to see available animals near you." },
+  { q: "What is a Hissa and how does it work?", a: "A Hissa is one of the 7 equal shares of a large animal (cow or camel). According to Islamic law, one large animal can fulfill the Qurbani obligation for up to 7 people. You pay for 1/7th of the animal's price and receive 1/7th of the meat after slaughter." },
+  { q: "Are the animals Shariah-compliant?", a: "Yes. All animals on EzQurbani meet the Shariah requirements for Qurbani — they are above the minimum age, healthy, free from major defects, and pass a vet inspection. Each animal has a health certificate you can view before booking." },
+  { q: "When will my meat be delivered?", a: "Slaughter is performed on the morning of Eid ul-Adha (10th Dhul Hijjah). Meat is packaged and delivered to your registered address on the same day. You will receive real-time delivery tracking notifications." },
+  { q: "Can I cancel my booking?", a: "Cancellations are accepted up to 7 days before Eid. After that, bookings are final as animal preparation has already begun. Contact our support team for cancellation requests within the eligible window." },
+  { q: "Which payment methods are accepted?", a: "We accept Easypaisa, JazzCash, bank transfer (all major Pakistani banks), and cash payment at the time of delivery confirmation. All transactions generate a digital receipt immediately." },
+  { q: "Which cities do you serve?", a: "We currently serve Karachi, Lahore, and Islamabad. We are expanding to Hyderabad, Faisalabad, and Peshawar for Eid 2027. Enter your city during registration to see available animals near you." },
 ];
 
 /* ─── HOOKS ─────────────────────────────────── */
@@ -84,9 +85,9 @@ function useCountdown(targetDate) {
       const diff = new Date(targetDate) - new Date();
       if (diff <= 0) { setTimeLeft({ days: 0, hours: 0, mins: 0 }); return; }
       setTimeLeft({
-        days:  Math.floor(diff / 86400000),
+        days: Math.floor(diff / 86400000),
         hours: Math.floor((diff % 86400000) / 3600000),
-        mins:  Math.floor((diff % 3600000) / 60000),
+        mins: Math.floor((diff % 3600000) / 60000),
       });
     };
     calc();
@@ -99,8 +100,8 @@ function useCountdown(targetDate) {
 /* ─── SUB-COMPONENTS ─────────────────────────── */
 
 function Navbar({ onNav }) {
-  const [scrolled,    setScrolled]    = useState(false);
-  const [menuOpen,    setMenuOpen]    = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 60);
@@ -141,7 +142,7 @@ function Navbar({ onNav }) {
         <a onClick={() => scrollTo("animals")}>Animals</a>
         <a onClick={() => scrollTo("features")}>Features</a>
         <a onClick={() => scrollTo("faq")}>FAQ</a>
-        <a onClick={() => onNav("/login")} style={{color: "var(--gold-lt)"}}>Login</a>
+        <a onClick={() => onNav("/login")} style={{ color: "var(--gold-lt)" }}>Login</a>
         <a onClick={() => onNav("/register")}>Book Now →</a>
       </div>
     </>
@@ -153,10 +154,10 @@ function HeroVisual({ countdown }) {
     <div className="hero__visual">
       <div className="hero__animal-grid">
         {[
-          { emoji: "🐄", name: "Cow / Gaye",   sub: "7 hissas available", tag: "Popular" },
-          { emoji: "🐪", name: "Camel / Oont",  sub: "7 hissas available", tag: "Premium" },
-          { emoji: "🐑", name: "Dumba / Sheep", sub: "Full animal only",   tag: null },
-          { emoji: "🐐", name: "Bakra / Goat",  sub: "Full animal only",   tag: null },
+          { emoji: "🐄", name: "Cow / Gaye", sub: "7 hissas available", tag: "Popular" },
+          { emoji: "🐪", name: "Camel / Oont", sub: "7 hissas available", tag: "Premium" },
+          { emoji: "🐑", name: "Dumba / Sheep", sub: "Full animal only", tag: null },
+          { emoji: "🐐", name: "Bakra / Goat", sub: "Full animal only", tag: null },
         ].map((a) => (
           <div key={a.name} className="hero__animal-card">
             {a.tag && <span className="hero__animal-tag">{a.tag}</span>}
@@ -239,9 +240,9 @@ function FaqItem({ faq }) {
 
 /* ─── MAIN COMPONENT ─────────────────────────── */
 export default function Landing() {
-  const navigate   = useNavigate();
+  const navigate = useNavigate();
   const [filter, setFilter] = useState("all");
-  const countdown  = useCountdown("2026-06-27T06:00:00");
+  const countdown = useCountdown("2026-05-27T06:00:00");
   useScrollReveal();
 
   const filtered = filter === "all" ? ANIMALS : ANIMALS.filter((a) => a.filter === filter);
@@ -283,7 +284,7 @@ export default function Landing() {
               </button>
             </div>
             <div className="hero__stats">
-              {[["2,400+","Satisfied Families"],["500+","Verified Animals"],["3","Cities Served"]].map(([n,l]) => (
+              {[["2,400+", "Satisfied Families"], ["5000+", "Verified Animals"], ["3", "Cities Served"]].map(([n, l]) => (
                 <div key={l}>
                   <div className="hero__stat-num">{n}</div>
                   <div className="hero__stat-label">{l}</div>
@@ -314,9 +315,9 @@ export default function Landing() {
         <div className="how__header section-inner">
           <div className="section-label section-label--light section-label--center reveal">The Process</div>
           <h2 className="section-title section-title--white section-title--center reveal">
-            Simple as <span className="italic--gold" style={{fontStyle:"italic", color:"var(--gold-lt)"}}>Four Steps</span>
+            Simple as <span className="italic--gold" style={{ fontStyle: "italic", color: "var(--gold-lt)" }}>Four Steps</span>
           </h2>
-          <p className="section-desc section-desc--light section-desc--center reveal" style={{margin:"14px auto 0"}}>
+          <p className="section-desc section-desc--light section-desc--center reveal" style={{ margin: "14px auto 0" }}>
             From selection to delivery — your entire Qurbani managed digitally, with full transparency at every step.
           </p>
         </div>
@@ -346,7 +347,7 @@ export default function Landing() {
               </p>
             </div>
             <div className="filter-tabs reveal">
-              {[["all","All Animals"],["hissa","Hissa Available"],["full","Full Animal"]].map(([v,l]) => (
+              {[["all", "All Animals"], ["hissa", "Hissa Available"], ["full", "Full Animal"]].map(([v, l]) => (
                 <button
                   key={v}
                   className={`filter-tab${filter === v ? " active" : ""}`}
@@ -368,15 +369,54 @@ export default function Landing() {
         <div className="geo-bg" />
         <div className="hadith__ornament">❋</div>
         <p className="hadith__arabic">
-          مَا عَمِلَ ابْنُ آدَمَ يَوْمَ النَّحْرِ عَمَلاً أَحَبَّ إِلَى اللهِ مِنْ إِهْرَاقَةِ الدَّمِ
+          مَا عَمِلَ ابْنُ آدَمَ يَوْمَ النَّحْرِ عَمَلاً أَحَبَّ إِلَى اللَّهِ عَزَّ وَجَلَّ مِنْ هِرَاقَةِ دَمٍ
         </p>
         <p className="hadith__translation">
-          "There is no deed that a person can do on the day of Nahr (Eid al-Adha) that is more beloved
-          to Allah than the shedding of blood (of a sacrificial animal)."
+          "The son of Adam does not do any deed on the Day of Sacrifice that is dearer to Allah than shedding blood."
         </p>
-        <p className="hadith__source">— Sunan Ibn Majah 3126 · Authenticated by Al-Albani</p>
-        <div className="hadith__ornament" style={{marginTop:"20px"}}>❋</div>
+        <p className="hadith__source">— Sunan Ibn Majah 3126</p>
+        <div className="hadith__ornament" style={{ marginTop: "20px" }}>❋</div>
       </div>
+
+      {/* ── HALAL CERTIFICATION ── */}
+      <section className="halal-section">
+        <div className="section-inner">
+          <div className="halal-container">
+            <div className="halal-text reveal">
+              <div className="section-label">Verified & Pure</div>
+              <h2 className="section-title">
+                100% Halal & <span className="italic">Shariah-Compliant</span>
+              </h2>
+              <p className="section-desc">
+                Every sacrifice performed through EzQurbani is supervised by Shariah experts to ensure 
+                it meets all Islamic requirements for Qurbani. From the health of the animal to the 
+                final packaging, we maintain the highest standards of purity.
+              </p>
+              <div className="halal-bullets">
+                {[
+                  "Licensed Muslim butchers only",
+                  "Verified Shariah-compliant slaughterhouses",
+                  "Authentic Dua & Takbeer performed for each animal",
+                  "Hygienic processing & same-day distribution"
+                ].map((text, i) => (
+                  <div key={i} className="halal-bullet reveal reveal-d1">
+                    <span className="halal-bullet__icon">✓</span> {text}
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="halal-cert-wrapper reveal reveal-d2">
+              <div className="halal-cert-card">
+                <div className="cert-seal">OFFICIAL SEAL</div>
+                <img src={halalCert} alt="Halal Compliance Certificate" className="halal-cert-img" />
+                <div className="cert-reflection" />
+              </div>
+              <div className="cert-shadow" />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ── FEATURES ── */}
       <section id="features" className="features">
@@ -410,23 +450,7 @@ export default function Landing() {
               <span className="showcase__emoji">🐄</span>
               <div className="showcase__title">Premium Desi Cow</div>
               <div className="showcase__sub">Sourced from trusted farms · Vet certified · Shariah compliant</div>
-              <div className="showcase__stats">
-                {[["7","Total Hissas"],["3","Remaining"],["320kg","Weight"]].map(([n,l]) => (
-                  <div key={l} style={{textAlign:"center"}}>
-                    <div className="showcase__stat-num">{n}</div>
-                    <div className="showcase__stat-label">{l}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="hissa-slots">
-                <div className="hissa-slots__circles">
-                  {[1,2,3,4,5,6,7].map((n) => (
-                    <div key={n} className={`hissa-slot${n <= 4 ? " hissa-slot--booked" : " hissa-slot--free"}`}>{n}</div>
-                  ))}
-                </div>
-                <span className="hissa-slots__label">4/7 Booked</span>
-              </div>
-              <button className="btn-primary btn-primary--full" onClick={() => navigate("/register")}>
+              <button className="btn-primary btn-primary--full" style={{ marginTop: "20px" }} onClick={() => navigate("/register")}>
                 Book a Hissa Now →
               </button>
             </div>
@@ -479,7 +503,7 @@ export default function Landing() {
           <div className="section-label section-label--light section-label--center reveal">Limited Slots Available</div>
           <h2 className="section-title section-title--white section-title--center reveal">
             Fulfill Your Sunnah<br />
-            <span style={{fontStyle:"italic", color:"var(--gold-lt)"}}>This Eid ul-Adha</span>
+            <span style={{ fontStyle: "italic", color: "var(--gold-lt)" }}>This Eid ul-Adha</span>
           </h2>
           <p className="section-desc section-desc--light section-desc--center reveal">
             Animals are filling up fast. Register now, secure your booking, and leave the rest to us.
@@ -511,16 +535,16 @@ export default function Landing() {
               across Karachi, Lahore, and Islamabad every Eid ul-Adha.
             </p>
             <div className="footer__socials">
-              {["f","in","tw","yt"].map((s) => (
+              {["f", "in", "tw", "yt"].map((s) => (
                 <a key={s} href="#" className="footer__social">{s}</a>
               ))}
             </div>
           </div>
 
           {[
-            { title: "Platform", links: [["Create Account","/register"],["Sign In","/login"],["Browse Animals","#animals"],["How It Works","#how"]] },
-            { title: "Animals",  links: [["Cows & Wanda","#"],["Goats & Bakra","#"],["Sheep & Dumba","#"],["Camels","#"]] },
-            { title: "Support",  links: [["FAQ","#faq"],["Contact Us","#"],["Privacy Policy","#"],["Terms of Service","#"]] },
+            { title: "Platform", links: [["Create Account", "/register"], ["Sign In", "/login"], ["Browse Animals", "#animals"], ["How It Works", "#how"]] },
+            { title: "Animals", links: [["Cows & Wanda", "#"], ["Goats & Bakra", "#"], ["Sheep & Dumba", "#"], ["Camels", "#"]] },
+            { title: "Support", links: [["FAQ", "#faq"], ["Contact Us", "#"], ["Privacy Policy", "#"], ["Terms of Service", "#"]] },
           ].map((col) => (
             <div key={col.title}>
               <h5 className="footer__col-title">{col.title}</h5>

@@ -862,12 +862,117 @@
 }
 
 /* ════════════════════════════════════════
+   HALAL SECTION
+════════════════════════════════════════ */
+.halal-section {
+  padding: 120px 5%;
+  background: var(--cream);
+  overflow: hidden;
+}
+.halal-container {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 80px;
+  align-items: center;
+}
+.halal-text .section-title { margin-bottom: 24px; }
+.halal-bullets {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.halal-bullet {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  font-weight: 600;
+}
+.halal-bullet__icon {
+  width: 22px;
+  height: 22px;
+  background: var(--emerald);
+  color: var(--gold-lt);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+
+.halal-cert-wrapper {
+  position: relative;
+  perspective: 1200px;
+}
+.halal-cert-card {
+  position: relative;
+  background: var(--white);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+  transform: rotateY(-8deg) rotateX(5deg);
+  transition: transform 0.6s cubic-bezier(0.2, 0, 0.2, 1);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+.halal-cert-card:hover {
+  transform: rotateY(0deg) rotateX(0deg) scale(1.02);
+}
+.halal-cert-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+.cert-seal {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 80px;
+  height: 80px;
+  background: rgba(230, 59, 59, 0.1);
+  border: 2px dashed #e63b3b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 900;
+  color: #e63b3b;
+  transform: rotate(25deg);
+  z-index: 2;
+  pointer-events: none;
+}
+.cert-reflection {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%, rgba(0,0,0,0.05) 100%);
+  pointer-events: none;
+}
+.cert-shadow {
+  position: absolute;
+  bottom: -40px;
+  left: 10%;
+  right: 10%;
+  height: 20px;
+  background: rgba(0,0,0,0.1);
+  filter: blur(20px);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* ════════════════════════════════════════
    RESPONSIVE
 ════════════════════════════════════════ */
 @media (max-width: 1024px) {
   .how__grid { grid-template-columns: repeat(2, 1fr); }
   .how__grid::before { display: none; }
   .features__grid { grid-template-columns: 1fr; gap: 48px; }
+  .halal-container { grid-template-columns: 1fr; gap: 60px; text-align: center; }
+  .halal-bullets { align-items: center; }
+  .halal-cert-card { transform: none; }
   .footer__inner { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 768px) {
@@ -877,6 +982,7 @@
   .lnav__hamburger { display: flex; }
   .testimonials__grid { grid-template-columns: 1fr; }
   .faq__grid { grid-template-columns: 1fr; }
+  .halal-grid { grid-template-columns: 1fr; }
   .footer__inner { grid-template-columns: 1fr; }
   .animals__header { flex-direction: column; align-items: flex-start; }
   .hero__stats { gap: 20px; }
