@@ -22,6 +22,7 @@ import ManageBookings from './ManageBookings';
 import ManageSchedules from './ManageSchedules';
 import ManageDeliveries from './ManageDeliveries';
 import ManageUsers from './ManageUsers';
+import AdminReports from './AdminReports';
 
 const AdminDashboard = () => {
     const { user, logout } = useContext(AuthContext);
@@ -36,6 +37,7 @@ const AdminDashboard = () => {
 
     const navItems = [
         { path: '/dashboard/admin', name: 'Overview', icon: LayoutDashboard },
+        { path: '/dashboard/admin/reports', name: 'Advanced Reports', icon: TrendingUp },
         { path: '/dashboard/admin/animals', name: 'Manage Animals', icon: PawPrint },
         { path: '/dashboard/admin/bookings', name: 'All Bookings', icon: ClipboardList },
         { path: '/dashboard/admin/schedules', name: 'Schedules', icon: CalendarClock },
@@ -128,6 +130,7 @@ const AdminDashboard = () => {
                 <div className="flex-1 overflow-y-auto bg-ez-dark p-6">
                     <Routes>
                         <Route path="/" element={<AdminOverview />} />
+                        <Route path="/reports" element={<AdminReports />} />
                         <Route path="/animals" element={<ManageAnimals />} />
                         <Route path="/bookings" element={<ManageBookings />} />
                         <Route path="/schedules" element={<ManageSchedules />} />

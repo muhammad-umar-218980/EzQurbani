@@ -5,6 +5,11 @@ export const getDashboardStats = async () => {
     return response.data;
 };
 
+export const getAdvancedReports = async () => {
+    const response = await axiosInstance.get('/admin/reports');
+    return response.data;
+};
+
 export const getAllUsers = async () => {
     const response = await axiosInstance.get('/admin/users');
     return response.data;
