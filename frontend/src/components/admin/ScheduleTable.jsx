@@ -10,7 +10,7 @@ const ScheduleTable = ({ schedules }) => {
             <th className="p-4">Sch ID</th>
             <th className="p-4">Animal</th>
             <th className="p-4">Location</th>
-            <th className="p-4">Butcher</th>
+            <th className="p-4">Crew</th>
             <th className="p-4">Date & Time</th>
             <th className="p-4">Status</th>
           </tr>
@@ -21,8 +21,8 @@ const ScheduleTable = ({ schedules }) => {
               <td className="p-4">#{s.schedule_id}</td>
               <td className="p-4">{s.tag_no}</td>
               <td className="p-4">{s.house_name}</td>
-              <td className="p-4">{s.butcher_name}</td>
-              <td className="p-4 whitespace-nowrap">{new Date(s.slaughter_date).toLocaleDateString()} at {s.slaughter_time}</td>
+              <td className="p-4">{s.butcher_name} Crew</td>
+              <td className="p-4 whitespace-nowrap">{new Date(s.slaughter_date).toLocaleDateString()} at {s.slaughter_time?.substring(0, 5)}</td>
               <td className="p-4"><StatusBadge status={s.status} /></td>
             </tr>
           ))}

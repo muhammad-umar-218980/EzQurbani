@@ -29,15 +29,17 @@ export const GET_ALL_USERS = `
 `;
 
 export const INSERT_SCHEDULE = `
-    INSERT INTO SLAUGHTER_SCHEDULE (animal_id, house_id, butcher_id, slaughter_date, slaughter_time, status)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    INSERT INTO SLAUGHTER_SCHEDULE (animal_id, house_id, butcher_id, slaughter_date, slaughter_time, status, start_time, end_time)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     RETURNING *
 `;
 
 export const GET_ALL_SCHEDULES = `
-    SELECT s.*, a.tag_no, b.name as butcher_name, h.name as house_name
+    SELECT s.*, a.tag_no, b.name as butcher_name, h.name as house_name, ac.name as category_name,
+           s.start_time, s.end_time
     FROM SLAUGHTER_SCHEDULE s
     JOIN ANIMAL a ON s.animal_id = a.animal_id
+    JOIN ANIMAL_CATEGORY ac ON a.category_id = ac.category_id
     JOIN BUTCHER b ON s.butcher_id = b.butcher_id
     JOIN SLAUGHTER_HOUSE h ON s.house_id = h.house_id
 `;
@@ -45,3 +47,13 @@ export const GET_ALL_SCHEDULES = `
 export const GET_ALL_HOUSES = `SELECT * FROM SLAUGHTER_HOUSE`;
 
 export const GET_ALL_BUTCHERS = `SELECT * FROM BUTCHER`;
+
+export const GET_BOOKED_ANIMALS_FOR_SCHEDULING = `
+    SELECT a.*, ac.name as category_name, MAX(b.qurbani_day) as qurbani_day
+    FROM ANIMAL a
+    JOIN ANIMAL_CATEGORY ac ON a.category_id = ac.category_id
+    JOIN BOOKING b ON a.animal_id = b.animal_id
+    WHERE a.status = 'booked'
+    GROUP BY a.animal_id, ac.name
+    ORDER BY a.animal_id
+`;

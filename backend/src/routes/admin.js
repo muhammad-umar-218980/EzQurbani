@@ -8,7 +8,8 @@ import {
     createSchedule,
     getAllSchedules,
     getAllHouses,
-    getAllButchers
+    getAllButchers,
+    getBookedAnimals
 } from '../controllers/adminController.js';
 import { getAdvancedReports } from '../controllers/reportsController.js';
 import { verifyToken, requireAdmin } from '../middleware/auth.js';
@@ -25,5 +26,6 @@ router.post('/schedules', createSchedule);
 router.get('/schedules', getAllSchedules);
 router.get('/houses', getAllHouses);
 router.get('/butchers', getAllButchers);
+router.get('/booked-animals', getBookedAnimals);
 
 export default router;

@@ -22,6 +22,11 @@ export const getAllAgents = async () => {
     return response.data;
 };
 
+export const getDeliveryStats = async () => {
+    const response = await axiosInstance.get('/delivery/stats');
+    return response.data;
+};
+
 export const createMeatPackage = async (packageData) => {
     const response = await axiosInstance.post('/delivery/package', packageData);
     return response.data;

@@ -33,6 +33,35 @@ const TrackDelivery = () => {
         setError('');
         try {
             const data = await trackDelivery(id);
+            
+            // Dynamic Time-Aware Status Logic
+            const now = new Date();
+            let computedStatus = 'pending';
+
+            if (data.slaughter_date && data.slaughter_end_time) {
+                const sDate = new Date(data.slaughter_date);
+                const sDateStr = `${sDate.getFullYear()}-${String(sDate.getMonth()+1).padStart(2,'0')}-${String(sDate.getDate()).padStart(2,'0')}`;
+                const slaughterEnd = new Date(`${sDateStr}T${data.slaughter_end_time}`);
+                
+                if (now >= slaughterEnd) {
+                    computedStatus = 'slaughtered';
+                    
+                    if (data.delivery_date && data.shift_start && data.shift_end) {
+                        const dDate = new Date(data.delivery_date);
+                        const dDateStr = `${dDate.getFullYear()}-${String(dDate.getMonth()+1).padStart(2,'0')}-${String(dDate.getDate()).padStart(2,'0')}`;
+                        const shiftStartD = new Date(`${dDateStr}T${data.shift_start}`);
+                        const shiftEndD = new Date(`${dDateStr}T${data.shift_end}`);
+                        
+                        if (now >= shiftEndD) {
+                            computedStatus = 'delivered';
+                        } else if (now >= shiftStartD) {
+                            computedStatus = 'out_for_delivery';
+                        }
+                    }
+                }
+            }
+
+            data.computed_status = computedStatus;
             setTrackingInfo(data);
         } catch (err) {
             setError('No tracking information found for this booking yet.');
@@ -44,9 +73,9 @@ const TrackDelivery = () => {
 
     const steps = [
         { key: 'pending', label: 'Order Placed', icon: Clock },
-        { key: 'slaughtered', label: 'Slaughtered', icon: CheckCircle2 },
-        { key: 'packaged', label: 'Meat Packaged', icon: PackageSearch },
-        { key: 'delivered', label: 'Delivered', icon: Truck },
+        { key: 'slaughtered', label: 'Packaged', icon: PackageSearch },
+        { key: 'out_for_delivery', label: 'Out for Delivery', icon: Truck },
+        { key: 'delivered', label: 'Delivered', icon: CheckCircle2 },
     ];
 
     const getStatusIndex = (status) => {
@@ -92,7 +121,6 @@ const TrackDelivery = () => {
                         <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center relative z-10 shadow-lg border-4 border-white">
                             <Clock className="w-8 h-8 text-amber-500" />
                         </div>
-                        {/* Radar Pulse Effect */}
                         <div className="absolute inset-0 bg-amber-400 rounded-full animate-ping opacity-20" style={{ animationDuration: '2s' }}></div>
                         <div className="absolute -inset-4 border-2 border-amber-100 rounded-full animate-[spin_4s_linear_infinite] border-t-amber-400"></div>
                     </div>
@@ -100,7 +128,6 @@ const TrackDelivery = () => {
                     <h3 className="text-2xl font-bold text-ez-emerald font-serif mb-2">Awaiting Progress</h3>
                     <p className="text-gray-500 max-w-sm">Your order is confirmed. Tracking information will appear here once the fulfillment process begins.</p>
                     
-                    {/* Bouncing dots */}
                     <div className="flex gap-2 mt-6">
                         <span className="w-2.5 h-2.5 bg-ez-gold rounded-full animate-bounce shadow-sm" style={{ animationDelay: '0ms' }}></span>
                         <span className="w-2.5 h-2.5 bg-ez-gold rounded-full animate-bounce shadow-sm" style={{ animationDelay: '150ms' }}></span>
@@ -115,14 +142,13 @@ const TrackDelivery = () => {
                     <div className="bg-white p-8 rounded-3xl shadow-xl border border-ez-gold/30">
                         <div className="flex justify-between items-center mb-12">
                             {steps.map((step, index) => {
-                                const currentStatusIdx = getStatusIndex(trackingInfo.status);
+                                const currentStatusIdx = getStatusIndex(trackingInfo.computed_status);
                                 const isCompleted = index <= currentStatusIdx;
                                 const isCurrent = index === currentStatusIdx;
                                 const Icon = step.icon;
 
                                 return (
                                     <div key={step.key} className="flex flex-col items-center flex-1 relative">
-                                        {/* Connector Line */}
                                         {index < steps.length - 1 && (
                                             <div className={`absolute left-1/2 top-5 w-full h-1 z-0 ${
                                                 index < currentStatusIdx ? 'bg-ez-gold' : 'bg-ez-cream border-t border-dashed border-ez-gold/30'
@@ -147,10 +173,19 @@ const TrackDelivery = () => {
                                 <div className="flex items-center gap-3 text-ez-emerald">
                                     <div className="p-2 bg-ez-cream rounded-lg border border-ez-gold/20"><Truck className="w-5 h-5 text-ez-gold" /></div>
                                     <div>
-                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 font-serif">Agent Details</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 font-serif">Logistics Partner</p>
                                         <p className="font-bold text-ez-emerald text-lg">{trackingInfo.agent_name || 'Assigning soon...'}</p>
                                     </div>
                                 </div>
+                                {trackingInfo.truck_name && (
+                                <div className="flex items-center gap-3 text-ez-emerald ml-10">
+                                    <div className="w-2 h-2 rounded-full bg-ez-gold"></div>
+                                    <div>
+                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 font-serif">Refrigerated Truck</p>
+                                        <p className="font-bold text-ez-emerald">{trackingInfo.truck_name}</p>
+                                    </div>
+                                </div>
+                                )}
                                 <div className="flex items-center gap-3 text-ez-emerald">
                                     <div className="p-2 bg-ez-cream rounded-lg border border-ez-gold/20"><MapPin className="w-5 h-5 text-ez-gold" /></div>
                                     <div>
@@ -163,9 +198,38 @@ const TrackDelivery = () => {
                                 <div className="flex items-center gap-3 text-ez-emerald">
                                     <div className="p-2 bg-ez-cream rounded-lg border border-ez-gold/20"><Calendar className="w-5 h-5 text-ez-gold" /></div>
                                     <div>
-                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 font-serif">Estimated Delivery</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 font-serif">Expected Delivery</p>
                                         <p className="font-bold text-ez-emerald text-lg">
-                                            {trackingInfo.delivery_date ? new Date(trackingInfo.delivery_date).toLocaleDateString() : 'Scheduling...'}
+                                            {(() => {
+                                                // If scheduled, show premium date & time
+                                                if (trackingInfo.delivery_date) {
+                                                    const d = new Date(trackingInfo.delivery_date);
+                                                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                                    const formattedDate = `${d.getDate()} ${months[d.getMonth()]}`;
+                                                    
+                                                    if (trackingInfo.shift_start) {
+                                                        const formatTime = (tStr) => {
+                                                            const [h, m] = tStr.split(':').map(Number);
+                                                            const ampm = h >= 12 ? 'PM' : 'AM';
+                                                            const hrs = h % 12 || 12;
+                                                            return `${hrs}:${String(m).padStart(2,'0')} ${ampm}`;
+                                                        };
+                                                        return `Expected Delivery: ${formattedDate}, ${formatTime(trackingInfo.shift_start)} – ${formatTime(trackingInfo.shift_end)}`;
+                                                    }
+                                                    return `Expected Delivery: ${formattedDate}`;
+                                                }
+                                                
+                                                // Fallback estimate based on selected Eid Day preference before scheduling
+                                                if (trackingInfo.qurbani_day) {
+                                                    const day = trackingInfo.qurbani_day;
+                                                    let estimatedDate = '27 May';
+                                                    if (day.includes('2nd')) estimatedDate = '28 May';
+                                                    if (day.includes('3rd')) estimatedDate = '29 May';
+                                                    return `Expected Delivery: ${estimatedDate} (Pending Schedule)`;
+                                                }
+                                                
+                                                return 'Scheduling...';
+                                            })()}
                                         </p>
                                     </div>
                                 </div>

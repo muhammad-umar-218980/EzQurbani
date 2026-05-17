@@ -20,8 +20,8 @@ export const getAllHouses = async () => {
     return response.data;
 };
 
-export const getAllButchers = async () => {
-    const response = await axiosInstance.get('/admin/butchers');
+export const getAllButchers = async (date) => {
+    const response = await axiosInstance.get('/admin/butchers', { params: { date } });
     return response.data;
 };
 
@@ -32,5 +32,10 @@ export const createSchedule = async (scheduleData) => {
 
 export const getAllSchedules = async () => {
     const response = await axiosInstance.get('/admin/schedules');
+    return response.data;
+};
+
+export const getBookedAnimals = async () => {
+    const response = await axiosInstance.get('/admin/booked-animals');
     return response.data;
 };
